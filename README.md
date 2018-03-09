@@ -28,6 +28,7 @@ module.exports.handler = (event, context, callback) => {
     delay: 200, // milliseconds, used exponentially in backoff
     limit: 3 // number of retries
   },
-  transform: /* try to parse the JSON record, or { message } if not parsable */
+  firehose: undefined // a custom firehose client to use
+  transform: undefined // try to parse the JSON record, or { message } if not parsable
 }
 ```

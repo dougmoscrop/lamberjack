@@ -14,19 +14,19 @@ const items = 500;
 const bytes = 4 * MEGABYTE;
 
 module.exports = (event, options = {}) => {
-  const { deliveryStreamName, retry = {}, transformation } = options;
+  const { deliveryStreamName, firehose, retry = {}, transformation } = options;
 
   if (deliveryStreamName) {
     const retryDelay = retry.delay;
     const retryLimit = retry.limit;
 
     const logEvents = getLogEvents(event);
-    
+
     return pump(
       intoStream.obj(logEvents),
       transform(transformation),
       batches({ limit: { items, bytes } }),
-      put({ deliveryStreamName, retryLimit, retryDelay })
+      put({ firehose, deliveryStreamName, retryLimit, retryDelay })
     );
   }
 
