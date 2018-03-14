@@ -8,6 +8,10 @@
     "posttest": "eslint ."
   },
   "author": "Doug Moscrop <doug.moscrop@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dougmoscrop/lamberjack.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "ava": "^0.25.0",
