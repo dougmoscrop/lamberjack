@@ -1,6 +1,6 @@
 {
   "name": "lamberjack",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Use inside a Lambda function to send logs to Firehose",
   "main": "lamberjack.js",
   "scripts": {
