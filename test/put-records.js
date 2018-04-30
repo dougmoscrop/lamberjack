@@ -19,7 +19,9 @@ test.serial('works', t => {
       'aws-sdk': aws
     });
 
-    intoStream.obj([{ Data: 'test1' }])
+    const record = JSON.stringify({ message: 'test' });
+
+    intoStream.obj([record])
       .pipe(putRecords({ deliveryStreamName: 'foo' }))
       .on('finish', () => {
         try {
@@ -58,7 +60,10 @@ test.serial('retries on failedPutCount', t => {
       'aws-sdk': aws
     });
 
-    intoStream.obj([[{ Data: 'test1' }, { Data: 'test2' }]])
+    const firstRecord = JSON.stringify({ message: 'test' });
+    const secondRecord = JSON.stringify({ message: 'test2' });
+
+    intoStream.obj([[firstRecord, secondRecord]])
       .pipe(putRecords({ deliveryStreamName: 'foo' }))
       .on('finish', () => {
         try {
@@ -82,7 +87,9 @@ test.serial('rejects on error', t => {
       'aws-sdk': aws
     });
 
-    intoStream.obj([{ Data: 'test1' }])
+    const record = JSON.stringify({ message: 'test' });
+
+    intoStream.obj([record])
       .pipe(putRecords({ deliveryStreamName: 'foo' }))
       .on('finish', () => {
         t.fail('should not finish');
@@ -114,7 +121,10 @@ test.serial('rejects when retryCountExceeded', t => {
       'aws-sdk': aws
     });
 
-    intoStream.obj([[{ Data: 'test1' }, { Data: 'test2' }]])
+    const firstRecord = JSON.stringify({ message: 'test' });
+    const secondRecord = JSON.stringify({ message: 'test2' });
+
+    intoStream.obj([[firstRecord, secondRecord]])
       .pipe(putRecords({ deliveryStreamName: 'foo', retryLimit: 2, retryDelay: 50 }))
       .on('error', e => {
         t.deepEqual(firehose.stub.callCount, 3);

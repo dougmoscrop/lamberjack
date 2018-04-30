@@ -26,7 +26,7 @@ test('leaves message as string', t => {
 
   return getStream.array(stream)
     .then(str => {
-      t.deepEqual(str, [{ message: 'test' }]);
+      t.deepEqual(str, [JSON.stringify({ message: 'test' })]);
     });
 });
 
@@ -36,7 +36,7 @@ test('parses message as object', t => {
 
   return getStream.array(stream)
     .then(str => {
-      t.deepEqual(str, [{ test: 'testing' }]);
+      t.deepEqual(str, [JSON.stringify({ test: 'testing' })]);
     });
 });
 
@@ -46,6 +46,6 @@ test('does not parse a non-object message', t => {
 
   return getStream.array(stream)
     .then(str => {
-      t.deepEqual(str, [{ message: 'null' }]);
+      t.deepEqual(str, [JSON.stringify({ message: 'null' })]);
     });
 });
