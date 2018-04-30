@@ -7,6 +7,7 @@ const batches = require('stream-batches');
 const getLogEvents = require('./lib/get-log-events');
 const transform = require('./lib/transform-records');
 const put = require('./lib/put-records');
+const format = require('./lib/format-records')
 
 const MEGABYTE = 1024 * 1024;
 
@@ -14,7 +15,12 @@ const items = 500;
 const bytes = 4 * MEGABYTE;
 
 module.exports = (event, options = {}) => {
-  const { deliveryStreamName, firehose, retry = {}, transformation } = options;
+  const {
+    deliveryStreamName,
+    firehose,
+    retry = {},
+    transformation
+  } = options;
 
   if (deliveryStreamName) {
     const retryDelay = retry.delay;
@@ -26,7 +32,8 @@ module.exports = (event, options = {}) => {
       intoStream.obj(logEvents),
       transform(transformation),
       batches({ limit: { items, bytes } }),
-      put({ firehose, deliveryStreamName, retryLimit, retryDelay })
+      format(),
+      put({ client: firehose, deliveryStreamName, retryLimit, retryDelay })
     );
   }
 
