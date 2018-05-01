@@ -3,11 +3,11 @@
 const pump = require('pump-promise');
 const intoStream = require('into-stream');
 const batches = require('stream-batches');
+const { firehose } = require('aws-streams');
 
 const getLogEvents = require('./lib/get-log-events');
 const transform = require('./lib/transform-records');
-const put = require('./lib/put-records');
-const format = require('./lib/format-records')
+const format = require('./lib/format-records');
 
 const MEGABYTE = 1024 * 1024;
 
@@ -17,7 +17,7 @@ const bytes = 4 * MEGABYTE;
 module.exports = (event, options = {}) => {
   const {
     deliveryStreamName,
-    firehose,
+    firehose: client,
     retry = {},
     transformation
   } = options;
@@ -33,7 +33,7 @@ module.exports = (event, options = {}) => {
       transform(transformation),
       batches({ limit: { items, bytes } }),
       format(),
-      put({ client: firehose, deliveryStreamName, retryLimit, retryDelay })
+      new firehose.PutRecords(deliveryStreamName, { client, retryLimit, retryDelay })
     );
   }
 
